@@ -49,8 +49,9 @@ func (this *HashidsConfig) notify(_salt string, _minLength int, _alphabet string
 }
 
 func (this *HashidsConfig) initialize(_salt string, _minLength int, _alphabet string) {
-	filterAlphabet := uniqueCharacter(_alphabet)
-	filterAlphabet = removeSpaces(_alphabet)
+	filterAlphabet := _alphabet
+	filterAlphabet = uniqueCharacter(filterAlphabet)
+	filterAlphabet = removeSpaces(filterAlphabet)
 
 	if len(filterAlphabet) < MIN_ALPHABET_LENGTH {
 		panic(fmt.Sprintf("alphabet must contain at least %d different characters", MIN_ALPHABET_LENGTH))
