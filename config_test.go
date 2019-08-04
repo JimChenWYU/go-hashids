@@ -78,6 +78,5 @@ func TestNewHashidConfig(t *testing.T) {
 		if string(config.alphabet) == string(_config.alphabet) {
 			t.Errorf("alphabet = %v should be not equal to original alphabet = %v.", string(config.alphabet), string(_config.alphabet))
 		}
-		t.Logf("config = %v | _config = %v", config, _config)
 	})
 }

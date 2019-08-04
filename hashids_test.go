@@ -150,13 +150,6 @@ func TestHashids_EncodeHexWithError(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "Case abc encode to 1kNW4RKP9Xzjd5RzWGvOElgbLeqVmD",
-			fields:  fields{options: options},
-			args:    args{hex: "abc"},
-			want:    "1kNW4RKP9Xzjd5RzWGvOElgbLeqVmD",
-			wantErr: false,
-		},
-		{
 			name:    "Case 18af encode to Woz1Dw4BvXmRGkZQLde9M7k2rK63Yp",
 			fields:  fields{options: options},
 			args:    args{hex: "18af"},
