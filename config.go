@@ -13,7 +13,7 @@ const (
 	SEPS                string  = "cfhistuCFHISTU"
 	MIN_ALPHABET_LENGTH int     = 16
 	SEP_DIV             float64 = 3.5
-	GUARD_DIV           float64 = 3.5
+	GUARD_DIV           float64 = 12
 )
 
 type HashidsConfig struct {
@@ -71,6 +71,7 @@ func (this *HashidsConfig) initialize(_salt string, _minLength int, _alphabet st
 		for j, a := range alphabet {
 			if a == seps[i] {
 				found = j
+				break
 			}
 		}
 
@@ -95,7 +96,7 @@ func (this *HashidsConfig) initialize(_salt string, _minLength int, _alphabet st
 	alphabet = consistentShuffle(alphabet, salt)
 	guardCount := int(math.Ceil(float64(len(alphabet)) / GUARD_DIV))
 
-	if len(alphabet) > 3 {
+	if len(alphabet) < 3 {
 		guards = seps[:guardCount]
 		seps = seps[guardCount:]
 	} else {
