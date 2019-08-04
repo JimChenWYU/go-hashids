@@ -5,5 +5,8 @@ go:
   - 1.12.*
   - master
 
-script:
-  - go test -v ./
+install:
+  - export GOPATH=$HOME/gopath/src/github.com/jimchen/hashids
+  - export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+
+script: go test -v ./
