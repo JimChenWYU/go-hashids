@@ -2,6 +2,9 @@ package hashids
 
 import (
 	"errors"
+	"fmt"
+	"math"
+	"strconv"
 )
 
 type Hashids struct {
@@ -19,7 +22,7 @@ func NewHashidsObject(options *HashidsConfig) *Hashids {
 }
 
 func (this *Hashids) Encode(numbers []int) string {
-	numbersInt64 := make([]int64, len(numbers))
+	numbersInt64 := make([]int64, 0, len(numbers))
 	for _, number := range numbers {
 		numbersInt64 = append(numbersInt64, int64(number))
 	}
@@ -33,11 +36,6 @@ func (this *Hashids) Encode(numbers []int) string {
 	return result
 }
 
-//
-//func (this *Hashids) EncodeHex(hex string) (string, error) {
-//
-//}
-//
 func (this *Hashids) Decode(hash string) []int {
 	result64, err := this.DecodeInt64(hash)
 	if err != nil {
@@ -52,10 +50,75 @@ func (this *Hashids) Decode(hash string) []int {
 	return result
 }
 
-//
-//func (this *Hashids) DecodeHex(hash string) ([]int, error) {
-//
-//}
+func (this *Hashids) EncodeHex(hex string) string {
+	result, err := this.EncodeHexWithError(hex)
+	if err != nil {
+		panic(err)
+	}
+
+	return result
+}
+
+func (this *Hashids) DecodeHex(hash string) string {
+	result, err := this.DecodeHexWithError(hash)
+	if err != nil {
+		panic(err)
+	}
+
+	return result
+}
+
+func (this *Hashids) EncodeHexWithError(hex string) (string, error) {
+	for _, b := range hex {
+		switch {
+		case (b >= '0') && (b <= '9'):
+		case (b >= 'a') && (b <= 'f'):
+		case (b >= 'A') && (b <= 'F'):
+		default:
+			return "", errors.New("invalid hex digit")
+		}
+	}
+
+	hexLength := len(hex)
+	hexInt := make([]int, 0, int(math.Ceil(float64(hexLength)/12)))
+	for i, step := 0, 12; i < hexLength; i += step {
+		rightIndex := i + step
+		if rightIndex > hexLength {
+			rightIndex = hexLength
+		}
+		buffer := "1" + hex[i:rightIndex]
+		n, err := strconv.ParseUint(buffer, 16, len([]byte(buffer))*4)
+
+		if err != nil {
+			return "", err
+		}
+
+		hexInt = append(hexInt, int(n))
+	}
+
+	return this.Encode(hexInt), nil
+}
+
+func (this *Hashids) DecodeHexWithError(hash string) (string, error) {
+	resultInt64, err := this.DecodeInt64(hash)
+	if err != nil {
+		return "", err
+	}
+
+	var (
+		buffer     string
+		bufferRune []rune
+		resultRune []rune
+	)
+	for _, s := range resultInt64 {
+		buffer = fmt.Sprintf("%x", s)
+		// remove the first character '1'
+		bufferRune = stringToRuneArray(buffer[1:])
+		resultRune = append(resultRune, bufferRune...)
+	}
+
+	return string(resultRune), nil
+}
 
 func (this *Hashids) EncodeInt64(numbers []int64) (string, error) {
 	if len(numbers) == 0 {
