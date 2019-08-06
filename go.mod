@@ -1,3 +1,3 @@
 module jimchen/hashids
 
-go 1.12
+go 1.11
