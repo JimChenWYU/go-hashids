@@ -1,12 +1,11 @@
 language: go
 
 go:
-  - "1.11"
-  - "1.12"
+  - 1.11.x
+  - 1.12.x
   - master
 
-install:
-  - export GOPATH=$HOME/gopath/src/github.com/jimchen/hashids
-  - export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+env:
+  - GO111MODULE=on
 
-script: go test -v ./
+script: go test -v
