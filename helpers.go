@@ -18,7 +18,7 @@ func uniqueCharacter(alphabet string) string {
 }
 
 func removeSpaces(str string) string {
-	return strings.ReplaceAll(str, " ", "")
+	return strings.Replace(str, " ", "", -1)
 }
 
 func consistentShuffle(alphabet []rune, salt []rune) []rune {
