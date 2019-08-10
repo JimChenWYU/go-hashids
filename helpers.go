@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// Unique a string character
 func uniqueCharacter(alphabet string) string {
 	var result strings.Builder
 	for i, alphabetLen := 0, len(alphabet); i < alphabetLen; i++ {
@@ -17,10 +18,12 @@ func uniqueCharacter(alphabet string) string {
 	return result.String()
 }
 
+// Remove a string spaces
 func removeSpaces(str string) string {
 	return strings.Replace(str, " ", "", -1)
 }
 
+// Shuffle a string
 func consistentShuffle(alphabet []rune, salt []rune) []rune {
 	var (
 		integer int
@@ -44,6 +47,7 @@ func consistentShuffle(alphabet []rune, salt []rune) []rune {
 	return result
 }
 
+// Hash func
 func hash(input int64, alphabet []rune) []rune {
 	result := make([]rune, 0)
 	for {
@@ -59,6 +63,7 @@ func hash(input int64, alphabet []rune) []rune {
 	return result
 }
 
+// Unhash func
 func unhash(input, alphabet []rune) (int64, error) {
 	result := int64(0)
 	for _, inputRune := range input {
@@ -71,6 +76,7 @@ func unhash(input, alphabet []rune) (int64, error) {
 	return result, nil
 }
 
+// Split a string
 func splitRunes(input, seps []rune) [][]rune {
 	splitPoses := make([]int, 0)
 	for pos, inputRune := range input {
@@ -94,16 +100,19 @@ func splitRunes(input, seps []rune) [][]rune {
 	return result
 }
 
+// Copy Slice
 func copyRuneSlice(r []rune) []rune {
 	result := make([]rune, len(r))
 	copy(result, r)
 	return result
 }
 
+// Transfer a string to rune array
 func stringToRuneArray(str string) []rune {
 	return []rune(str)
 }
 
+// Debug func
 func debug(input ...interface{}) {
 	fmt.Println(input...)
 	os.Exit(0)

@@ -7,20 +7,25 @@ import (
 	"strconv"
 )
 
+// Hashids contains HashidsConfig
 type Hashids struct {
 	options *HashidsConfig
 }
 
+// NewHashidsObjectSimple creates a new default NewHashidsObjectSimple
 func NewHashidsObjectSimple() *Hashids {
 	return NewHashidsObject(NewDefaultHashidsConfig())
 }
 
+// NewHashidsObject creates a new NewHashidsObject
 func NewHashidsObject(options *HashidsConfig) *Hashids {
 	return &Hashids{
 		options: options,
 	}
 }
 
+// Encode hashes an array of int to a string containing at least MinLength characters taken from the Alphabet.
+// Use Decode using the same Alphabet and Salt to get back the array of int.
 func (this *Hashids) Encode(numbers []int) string {
 	numbersInt64 := make([]int64, 0, len(numbers))
 	for _, number := range numbers {
@@ -36,6 +41,9 @@ func (this *Hashids) Encode(numbers []int) string {
 	return result
 }
 
+// Decode unhashes the string passed to an array of int.
+// It is symmetric with Encode if the Alphabet and Salt are the same ones which were used to hash.
+// MinLength has no effect on Decode.
 func (this *Hashids) Decode(hash string) []int {
 	result64, err := this.DecodeInt64(hash)
 	if err != nil {
@@ -50,6 +58,11 @@ func (this *Hashids) Decode(hash string) []int {
 	return result
 }
 
+// EncodeHex hashes a hexadecimal string to a string containing at least MinLength characters taken from the Alphabet.
+// A hexadecimal string should not contain the 0x prefix.
+// Use DecodeHex using the same Alphabet and Salt to get back the hexadecimal string.
+//
+// Each hex nibble is encoded as an integer in range [16, 31].
 func (this *Hashids) EncodeHex(hex string) string {
 	result, err := this.EncodeHexWithError(hex)
 	if err != nil {
@@ -59,6 +72,10 @@ func (this *Hashids) EncodeHex(hex string) string {
 	return result
 }
 
+// DecodeHex unhashes the string passed to a hexadecimal string.
+// It is symmetric with EncodeHex if the Alphabet and Salt are the same ones which were used to hash.
+//
+// Each hex nibble is decoded from an integer in range [16, 31].
 func (this *Hashids) DecodeHex(hash string) string {
 	result, err := this.DecodeHexWithError(hash)
 	if err != nil {
@@ -68,6 +85,7 @@ func (this *Hashids) DecodeHex(hash string) string {
 	return result
 }
 
+// see EncodeHex
 func (this *Hashids) EncodeHexWithError(hex string) (string, error) {
 	for _, b := range hex {
 		switch {
@@ -99,6 +117,7 @@ func (this *Hashids) EncodeHexWithError(hex string) (string, error) {
 	return this.Encode(hexInt), nil
 }
 
+// see DecodeHex
 func (this *Hashids) DecodeHexWithError(hash string) (string, error) {
 	resultInt64, err := this.DecodeInt64(hash)
 	if err != nil {
@@ -120,6 +139,8 @@ func (this *Hashids) DecodeHexWithError(hash string) (string, error) {
 	return string(resultRune), nil
 }
 
+// EncodeInt64 hashes an array of int64 to a string containing at least MinLength characters taken from the Alphabet.
+// Use DecodeInt64 using the same Alphabet and Salt to get back the array of int64.
 func (this *Hashids) EncodeInt64(numbers []int64) (string, error) {
 	if len(numbers) == 0 {
 		return "", errors.New("can not encoding empty array of numbers")
@@ -186,6 +207,9 @@ func (this *Hashids) EncodeInt64(numbers []int64) (string, error) {
 	return string(result), nil
 }
 
+// DecodeInt64 unhashes the string passed to an array of int64.
+// It is symmetric with EncodeInt64 if the Alphabet and Salt are the same ones which were used to hash.
+// MinLength has no effect on DecodeInt64.
 func (this *Hashids) DecodeInt64(hash string) ([]int64, error) {
 	var (
 		hashes [][]rune

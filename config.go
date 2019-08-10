@@ -6,6 +6,7 @@ import (
 )
 
 const (
+	// DefaultAlphabet is the default alphabet used by go-hashids
 	DEFAULT_ALPHABET   string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 	DEFAULT_SALT       string = ""
 	DEFAULT_MIN_LENGTH int    = 0
@@ -16,6 +17,7 @@ const (
 	GUARD_DIV           float64 = 12
 )
 
+// HashidsConfig contains the parameters needed to encode/decode hashids
 type HashidsConfig struct {
 	alphabet  []rune
 	seps      []rune
@@ -27,10 +29,12 @@ type HashidsConfig struct {
 	originalAlphabet string
 }
 
+// NewDefaultHashidsConfig creates a new default HashidsConfig
 func NewDefaultHashidsConfig() *HashidsConfig {
 	return NewHashidConfig(DEFAULT_SALT, DEFAULT_MIN_LENGTH, DEFAULT_ALPHABET)
 }
 
+// NewDefaultHashidsConfig creates a new HashidsConfig
 func NewHashidConfig(_salt string, _minLength int, _alphabet string) *HashidsConfig {
 	config := &HashidsConfig{
 		alphabet:         nil,
@@ -44,10 +48,12 @@ func NewHashidConfig(_salt string, _minLength int, _alphabet string) *HashidsCon
 	return config
 }
 
+// When salt or alphabet has changes, notify to initialize HashidsConfig
 func (this *HashidsConfig) notify(_salt string, _minLength int, _alphabet string) {
 	this.initialize(_salt, _minLength, _alphabet)
 }
 
+// Initialize HashidsConfig
 func (this *HashidsConfig) initialize(_salt string, _minLength int, _alphabet string) {
 	filterAlphabet := _alphabet
 	filterAlphabet = uniqueCharacter(filterAlphabet)
@@ -114,14 +120,17 @@ func (this *HashidsConfig) initialize(_salt string, _minLength int, _alphabet st
 	this.guards = guards
 }
 
+// Set minLength
 func (this *HashidsConfig) SetMinLength(_minLength int) {
 	this.minLength = _minLength
 }
 
+// Set salt
 func (this *HashidsConfig) SetSalt(_salt string) {
 	this.notify(_salt, this.minLength, this.originalAlphabet)
 }
 
+// Set alphabet
 func (this *HashidsConfig) SetAlphabet(_alphabet string) {
 	this.notify(this.originalSalt, this.minLength, _alphabet)
 }
