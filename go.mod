@@ -1,3 +1,3 @@
-module github.com/jimchen/hashids
+module github.com/jimchenwyu/go-hashids
 
 go 1.11
